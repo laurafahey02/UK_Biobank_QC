@@ -55,7 +55,8 @@ process Format_sqc_file {
 }
 
 process Create_list_samples_to_exclude {
-
+    // Aim: Create a list of individuals to remove on the basis of on basis of high heterozygosity, high missingness, discordent sex info., chromosomal aneuploidies and retracted consent.
+    
     input:
     path sqc_id from sqc
 
@@ -70,7 +71,8 @@ process Create_list_samples_to_exclude {
 }
 
 process Create_list_related_samples {
-
+    // Aim: create a list of related samples to remove by first identifying samples with an excess number of relaties and then preferentially selecting samples without phenotypic data of interest.
+    
     input:
     path rel_file from params.rel_file
     path IDs2Keep from params.IDsPheno
@@ -91,7 +93,7 @@ process Create_list_related_samples {
 }
 
 process SNPs_info_thresholding {
-
+    \\ Aim: Create a list of SNPs that have an info score greater than 0.8 each chromosome. 
     input:
     tuple val(chr_number), file(mfi_files) from mfi_ch
 

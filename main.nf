@@ -37,7 +37,7 @@ println """\
 
 process Format_sqc_file {
    
-    //Aim: Add sample IDs to ukb_sqc_v2.txt to create the file sample_qc.txt. Samples are in the same order in fam files and ukb_sqc_v2.txt.
+    // Aim: Add sample IDs to ukb_sqc_v2.txt to create the file sample_qc.txt. Samples are in the same order in fam files and ukb_sqc_v2.txt.
     
     input:
     path 'sqc_file' from params.sqc_file
@@ -93,7 +93,7 @@ process Create_list_related_samples {
 }
 
 process SNPs_info_thresholding {
-    \\ Aim: Create a list of SNPs that have an info score greater than 0.8 each chromosome. 
+    // Aim: Create a list of SNPs that have an info score greater than 0.8 each chromosome. 
     input:
     tuple val(chr_number), file(mfi_files) from mfi_ch
 

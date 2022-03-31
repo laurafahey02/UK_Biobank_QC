@@ -36,7 +36,9 @@ println """\
          .stripIndent()
 
 process Format_sqc_file {
-
+   
+    //Aim: Add sample IDs to ukb_sqc_v2.txt to create the file sample_qc.txt. Samples are in the same order in fam files and ukb_sqc_v2.txt.
+    
     input:
     path 'sqc_file' from params.sqc_file
     path 'sqc_header' from params.sqc_header
@@ -48,7 +50,6 @@ process Format_sqc_file {
     script:
 
     """
-    # Aim: Add sample IDs to ukb_sqc_v2.txt to create the file sample_qc.txt. Samples are in the same order in fam files and ukb_sqc_v2.txt.
     Rscript "/data/UKB/Genotype_QC/bin/sqc.R" $sqc_file $sqc_header $fam_file sqc_id.txt
     """
 }

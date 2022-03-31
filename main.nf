@@ -20,13 +20,10 @@ geno=params.geno
 maf=params.maf
 hwe=params.hwe
 
-
 pfiles_ch = Channel.fromFilePairs(params.pfiles, size:3)
 mfi_ch = Channel
                 .fromPath(params.mfi_files)
                 .map { file -> tuple(file.baseName, file) }
-
-
 
 println """\
 
@@ -51,8 +48,8 @@ process Format_sqc_file {
     script:
 
     """
+    # Aim: Add sample IDs to ukb_sqc_v2.txt to create the file sample_qc.txt. Samples are in the same order in fam files and ukb_sqc_v2.txt.
     Rscript "/data/UKB/Genotype_QC/bin/sqc.R" $sqc_file $sqc_header $fam_file sqc_id.txt
-
     """
 }
 
@@ -68,10 +65,8 @@ process Create_list_samples_to_exclude {
 
     """
     Rscript "/data/UKB/Genotype_QC/bin/sqc_extract.R" $sqc_id samples_to_remove.txt
-
     """
 }
-
 
 process Create_list_related_samples {
 
@@ -85,14 +80,12 @@ process Create_list_related_samples {
     script:
 
     """
-
     awk '{print \$1}' $rel_file | sed "1d" > rel_ids1.txt
     awk '{print \$2}' $rel_file | sed "1d" > rel_ids2.txt
     cat rel_ids1.txt rel_ids2.txt | sort | uniq -c | sort -nr > rel_ids_count.txt    
     Rscript "/data/UKB/Genotype_QC/bin/count_rel.R" rel_ids_count.txt excess_rel.txt
     python "/data/UKB/Genotype_QC/bin/rel.py" $rel_file excess_rel.txt $IDs2Keep extract.txt
     cat extract.txt excess_rel.txt | awk '{print \$1, \$1}' > rel_to_remove.txt
-
     """
 }
 
@@ -108,7 +101,6 @@ process SNPs_info_thresholding {
 
     """
     Rscript "/data/UKB/Genotype_QC/bin/snps_to_keep.R" $mfi_files ${chr_number}.passInfo
-
     """
 }
 
@@ -127,7 +119,6 @@ process makeCovar {
     Rscript "/data/UKB/Genotype_QC/bin/sqc_covar.R" $sqc_id sqc_covar
     awk 'FNR==NR{a[\$1]=\$0;next} (\$1 in a) {print \$1,a[\$1],\$2,\$3,\$4}' sqc_covar $covar_file > all_covar.txt
     sed -i 's/UKBB/1/g; s/UKBL/2/g; s/M/1/g; s/F/2/g' all_covar.txt
-
     """
 }
 
@@ -145,7 +136,6 @@ process samples_to_remove {
 
     """
     cat $samples_to_remove $rel_to_remove $retracted_consent | sort | uniq | sed '/^-/d' > all_samples_to_remove.txt
-
     """
 }
 
@@ -165,9 +155,7 @@ process Plink_QC {
     script:
 
     """
-
     plink2 --pgen ${pfiles[0]} --psam ${pfiles[1]} --pvar ${pfiles[2]} --extract $snps --keep $eur_samples --remove $all_samples_to_remove --geno ${geno} --maf ${maf} --hwe ${hwe} --make-pgen --out ${chr_number}_qcd
-
     """
 }
 
@@ -184,8 +172,7 @@ process Plink_covar {
     script:
 
     """
-    plink2 --pgen ${pfiles[0]} --psam ${pfiles[1]} --pvar ${pfiles[2]} --covar $                                                                                                                                                   all_covar --write-covar
-
+    plink2 --pgen ${pfiles[0]} --psam ${pfiles[1]} --pvar ${pfiles[2]} --covar $all_covar --write-covar
     """
 }
 

@@ -10,5 +10,5 @@ Arguments:
 Optional arguments:
 
 --maf &emsp; &emsp; &emsp; Minor allele frequency cutoff<br/>
---geno &emsp; &emsp; &nbsp; Missingness er marker cutoff<br/>
---hwe &emsp; &emsp; &ensp; Hardy-Weinberg equilibrium cutoff<br/>
+--geno &emsp; &emsp; &nbsp; Missingness per marker cutoff<br/>
+--hwe &emsp; &emsp; &ensp; &nbsp; Hardy-Weinberg equilibrium cutoff<br/>
